@@ -1,35 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from "react";
+import "./App.css";
+import iphoneMockup from "./assets/iphone-mockup.jpg"; // iPhone mockup image
+import macbookMockup from "./assets/macbook-mockup.jpg"; // MacBook mockup image
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [uploadedImage, setUploadedImage] = useState(null);
+
+  // Handle image upload
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setUploadedImage(event.target.result); // Set uploaded image as a base64 string
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="App">
+      <h1>Mockup Generator</h1>
+      <input type="file" accept="image/*" onChange={handleImageUpload} />
+      <div className="mockups">
+        {/* iPhone Mockup */}
+        <div className="mockup-container">
+          <img src={iphoneMockup} alt="iPhone Mockup" className="mockup" />
+          {uploadedImage && (
+            <img src={uploadedImage} alt="Uploaded" className="iphone-screen" />
+          )}
+        </div>
 
-export default App
+        {/* MacBook Mockup */}
+        <div className="mockup-container">
+          <img src={macbookMockup} alt="MacBook Mockup" className="mockup" />
+          {uploadedImage && (
+            <img src={uploadedImage} alt="Uploaded" className="macbook-screen" />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default App;
