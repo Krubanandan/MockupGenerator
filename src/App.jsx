@@ -25,7 +25,7 @@ const App = () => {
       <div className="mockups">
         {/* iPhone Mockup */}
         <div className="mockup-container">
-          <img src={iphoneMockup} alt="iPhone Mockup" className="mockup" />
+          <img src={iphoneMockup} alt="iPhone Mockup" className="mockupIphone" />
           {uploadedImage && (
             <img src={uploadedImage} alt="Uploaded" className="iphone-screen" />
           )}
@@ -33,7 +33,7 @@ const App = () => {
 
         {/* MacBook Mockup */}
         <div className="mockup-container">
-          <img src={macbookMockup} alt="MacBook Mockup" className="mockup" />
+          <img src={macbookMockup} alt="MacBook Mockup" className="mockupMac" />
           {uploadedImage && (
             <img src={uploadedImage} alt="Uploaded" className="macbook-screen" />
           )}
