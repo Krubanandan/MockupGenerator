@@ -19,12 +19,73 @@ const MockupGen = () => {
       reader.readAsDataURL(file);
     }
   };
+
+  // Create a canvas to merge the mockup and uploaded image
+  const generateDownloadImage = () => {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+  
+    const imgMockup = new Image();
+    imgMockup.src = iphoneMockup; // The iPhone mockup image
+  
+    const imgUploaded = new Image();
+    imgUploaded.src = uploadedImage; // The uploaded image
+  
+    imgMockup.onload = () => {
+      // Set canvas size to match the iPhone mockup dimensions
+      canvas.width = imgMockup.width;
+      canvas.height = imgMockup.height;
+  
+      // Draw the iPhone mockup
+      ctx.drawImage(imgMockup, 0, 0, imgMockup.width, imgMockup.height);
+  
+      imgUploaded.onload = () => {
+        // CSS values for cropping and positioning
+        const screenTop = 44; // Top position in px
+        const screenLeft = 156; // Left position in px
+        const screenWidth = 190; // Width in px
+        const screenHeight = 410; // Height in px
+  
+        // Calculate scaling for the uploaded image to crop appropriately
+        const scaleWidth = imgUploaded.width / screenWidth;
+        const scaleHeight = imgUploaded.height / screenHeight;
+  
+        const scale = Math.max(scaleWidth, scaleHeight); // Ensure the image fully covers the screen area
+  
+        const cropWidth = screenWidth * scale;
+        const cropHeight = screenHeight * scale;
+  
+        const cropX = (imgUploaded.width - cropWidth) / 2; // Center the crop horizontally
+        const cropY = (imgUploaded.height - cropHeight) / 2; // Center the crop vertically
+  
+        // Draw the cropped uploaded image
+        ctx.drawImage(
+          imgUploaded,
+          cropX,
+          cropY,
+          cropWidth,
+          cropHeight,
+          screenLeft,
+          screenTop,
+          screenWidth,
+          screenHeight
+        );
+  
+        // Create and trigger download link
+        const link = document.createElement("a");
+        link.href = canvas.toDataURL("image/png");
+        link.download = "iphone-mockup.png";
+        link.click();
+      };
+    };
+  };
+  
+  
+
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-2xl font-semibold">Mockup Generator</h1>
-    
-        
-      
+
       <div className="mockup-selector">
         <button
           className={selectedMockup === "iphone" ? "selected" : ""}
@@ -84,6 +145,13 @@ const MockupGen = () => {
           </div>
         )}
       </div>
+
+      {/* Download Button */}
+      {uploadedImage && (
+        <button onClick={generateDownloadImage} className="download-btn">
+          Download Mockup Image
+        </button>
+      )}
     </div>
   );
 };
