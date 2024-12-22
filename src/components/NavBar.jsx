@@ -3,21 +3,32 @@ import { NavLink } from "react-router-dom";
 
 const NavBar = () => {
   return (
-    <>
-      <div className="flex flex-row gap-96 p-5 items-center justify-center">
-        <h1 className="text-xl">MockUpGen</h1>
-        <ul className="flex flex-row gap-10">
-          <NavLink to="/">
-            <p>HOME</p>
-          </NavLink>
-          <NavLink to="/generate">
-            <p>GENERATE</p>
-          </NavLink>
+    <div className="bg-white shadow-md">
+      <div className="max-w-screen-xl mx-auto flex justify-between items-center p-5">
+        <h1 className="text-2xl font-semibold text-gray-800">MockUpGen</h1>
+        <ul className="flex space-x-8">
+          <li>
+            <NavLink
+              to="/"
+              className="text-gray-700 hover:text-blue-500 transition-colors"
+              activeClassName="text-blue-500"
+            >
+              Home
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/generate"
+              className="text-gray-700 hover:text-blue-500 transition-colors"
+              activeClassName="text-blue-500"
+            >
+              Generate
+            </NavLink>
+          </li>
         </ul>
       </div>
-      <p className="max-w-screen-lg h-[0.5px] bg-[#414141] mx-auto"></p>
-
-    </>
+      <div className="max-w-screen-lg h-[1px] bg-gray-300 mx-auto"></div>
+    </div>
   );
 };
 
