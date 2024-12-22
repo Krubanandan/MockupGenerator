@@ -85,28 +85,40 @@ const Home = () => {
           Client Presentations
         </p>
         <p className="w-4/5 sm:w-3/4 mx-auto text-md sm:text-lg">
-          In client presentations, mockups serve as a powerful tool for conveying your design vision in a tangible way.
+        In client presentations, mockups serve as a powerful tool for conveying your design vision in a tangible way. 
+        Clients are often more likely to approve designs when they can visualize how the final product will look in a 
+        real-world context, and mockups provide just that. By inserting your designs into mockups, you can showcase them 
+        in environments like mobile screens, posters, or packaging, making it easier for clients to grasp the design’s functionality and appeal.
         </p>
         <img src={b2} alt="b2" className="w-full sm:w-1/2 mx-auto p-5" />
         <p className="w-3/4 sm:w-3/4 mx-auto text-start text-lg sm:text-xl py-3 font-medium">
           Speed Up Design Process
         </p>
         <p className="w-4/5 sm:w-3/4 mx-auto text-md sm:text-lg">
-          Mockups can significantly speed up the design process by helping designers catch errors early.
+        Mockups can significantly speed up the design process by helping designers catch errors early. 
+        When designs are inserted into mockups, it becomes easier to spot issues like incorrect aspect ratios, 
+        font sizes, or color mismatches that might not be apparent in a design file. 
+        This allows for quick adjustments before moving on to final production, preventing costly revisions later.
         </p>
         <img src={b3} alt="b3" className="w-full sm:w-1/2 mx-auto p-5" />
         <p className="w-3/4 sm:w-3/4 mx-auto text-start text-lg sm:text-xl py-3 font-medium">
           E-commerce
         </p>
         <p className="w-4/5 sm:w-3/4 mx-auto text-md sm:text-lg">
-          In e-commerce, mockups are invaluable for displaying products online before they are physically produced.
+        In e-commerce, mockups are invaluable for displaying products online before they are physically produced. 
+        With mockups, you can create high-quality visuals of your product packaging, clothing designs, or 
+        even digital goods, and display them on your website or social media platforms. 
+        This allows you to market and sell products before they are manufactured, giving you a head start on generating interest and revenue.
         </p>
         <img src={b4} alt="b4" className="w-full sm:w-1/2 mx-auto p-5" />
         <p className="w-3/4 sm:w-3/4 mx-auto text-start text-lg sm:text-xl py-3 font-medium">
           Advertising
         </p>
         <p className="w-4/5 sm:w-3/4 mx-auto text-md sm:text-lg">
-          Mockups play a crucial role in creating high-quality advertising materials with minimal effort.
+        Mockups play a crucial role in creating high-quality advertising materials with minimal effort. 
+        Once a design is finalized, it can be easily inserted into a mockup to create professional visuals for use in ads, 
+        social media posts, or promotional materials. This allows you to quickly produce eye-catching graphics that are 
+        ready for deployment without the need for complex photography or additional editing.
         </p>
         <img src={b5} alt="b5" className="w-full sm:w-1/2 mx-auto p-5" />
       </div>
