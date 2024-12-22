@@ -110,9 +110,7 @@ const Home = () => {
         </p>
         <img src={b5} alt="b5" className="w-full sm:w-1/2 mx-auto p-5" />
       </div>
-      <div class="bg-gray-300 xs:bg-red-500 sm:bg-blue-500 md:bg-green-500 lg:bg-yellow-500 xl:bg-purple-500 2xl:bg-pink-500 3xl:bg-teal-500">
-  Responsive Background Colors
-</div>
+      
 
     </>
   );
