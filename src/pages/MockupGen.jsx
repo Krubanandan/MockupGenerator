@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./Mocked.css";
 import iphoneMockup from "../assets/iphone-mockup.jpg"; // iPhone mockup image
 import macbookMockup from "../assets/macbook-mockup.jpg"; // MacBook mockup image
@@ -9,21 +9,152 @@ const MockupGen = () => {
   const [img1Loaded, setImg1Loaded] = useState(false);
   const [img2Loaded, setImg2Loaded] = useState(false);
   const [img3Loaded, setImg3Loaded] = useState(false);
-  const [selectedMockup, setSelectedMockup] = useState("iphone"); // Default mockup selection
-  const [iphoneImg,setIphoneImg]=useState(iphoneMockup);
+  // const [selectedMockup, setSelectedMockup] = useState("iphone");
+  const [iphoneImg, setIphoneImg] = useState(false);
+
+  const canvasRef = useRef(null);
+  const highResCanvas = useRef(null);
+  const fileInputRef = useRef(null);
+
+  const img1 = useRef(new Image());
+  const img3 = useRef(new Image());
+
+  // Load mockup images
+  useEffect(() => {
+    img1.current.src = iphoneMockup;
+    img1.current.onload = () => setImg1Loaded(true);
+
+    img3.current.src = iphoneDy;
+    img3.current.onload = () => setImg3Loaded(true);
+  }, []);
 
   // Handle image upload
+
+  const drawImages = (canvas, ctx, width, height) => {
+    const originalWidth = 5000;
+    const originalHeight = 5000;
+
+    ctx.clearRect(0, 0, width, height); // Clear canvas
+    ctx.drawImage(img1.current, 0, 0, originalWidth, originalHeight);
+
+    if (uploadedImage) {
+      ctx.globalAlpha = 0.9;
+
+      // Adjust for uploaded image scaling and clipping
+      const cropWidth = uploadedImage.width * (19 / 41);
+      const cropHeight = uploadedImage.height;
+      const targetX = 1565;
+      const targetY = 445;
+
+      const scaleWidth = 1900;
+      const scaleHeight = 4100;
+
+      const borderRadii = { tl: 270, tr: 290, br: 270, bl: 270 };
+
+      function drawRoundedRect(ctx, x, y, width, height, radii) {
+        const { tl, tr, br, bl } = radii;
+        ctx.beginPath();
+        ctx.moveTo(x + tl, y);
+        ctx.lineTo(x + width - tr, y);
+        ctx.quadraticCurveTo(x + width, y, x + width, y + tr);
+        ctx.lineTo(x + width, y + height - br);
+        ctx.quadraticCurveTo(x + width, y + height, x + width - br, y + height);
+        ctx.lineTo(x + bl, y + height);
+        ctx.quadraticCurveTo(x, y + height, x, y + height - bl);
+        ctx.lineTo(x, y + tl);
+        ctx.quadraticCurveTo(x, y, x + tl, y);
+        ctx.closePath();
+      }
+
+      drawRoundedRect(
+        ctx,
+        targetX,
+        targetY,
+        scaleWidth,
+        scaleHeight,
+        borderRadii
+      );
+      ctx.clip();
+
+      ctx.drawImage(
+        uploadedImage,
+        0,
+        0,
+        cropWidth,
+        cropHeight,
+        targetX,
+        targetY,
+        scaleWidth,
+        scaleHeight
+      );
+    }
+
+    ctx.globalAlpha = 1.0;
+    ctx.drawImage(
+      img3.current,
+      2200,
+      280,
+      (img3.current.width * 2) / 17,
+      (img3.current.height * 2) / 17
+    );
+  };
+
+  const mergeAndCropImages = () => {
+    if (img1Loaded && img2Loaded && img3Loaded) {
+      const highCanvas = highResCanvas.current;
+      if (!highCanvas) {
+        console.error("High resolution canvas not found.");
+        return;
+      }
+
+      const highCtx = highCanvas.getContext("2d");
+      if (!highCtx) {
+        console.error("Failed to get context for high resolution canvas.");
+        return;
+      }
+
+      highCanvas.width = 5000;
+      highCanvas.height = 5000;
+
+      drawImages(highCanvas, highCtx, 5000, 5000);
+
+      const displayCanvas = canvasRef.current;
+      if (!displayCanvas) {
+        console.error("Display canvas not found.");
+        return;
+      }
+
+      const displayCtx = displayCanvas.getContext("2d");
+      if (!displayCtx) {
+        console.error("Failed to get context for display canvas.");
+        return;
+      }
+
+      displayCanvas.width = 500;
+      displayCanvas.height = 500;
+
+      displayCtx.drawImage(highCanvas, 0, 0, 500, 500);
+      setIphoneImg(true);
+    }
+  };
+
+  useEffect(() => {
+    if (canvasRef.current && highResCanvas.current) {
+      console.log("Canvas references are ready!");
+    }
+  }, []);
+
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
 
-    reader.onload = (event) => {
+    reader.onload = (e) => {
       const img = new Image();
       img.onload = () => {
-        setUploadedImage(event.target.result);
+        setUploadedImage(img);
         setImg2Loaded(true);
       };
-      img.src = event.target.result;
+      img.src = e.target.result;
     };
 
     if (file) {
@@ -31,135 +162,53 @@ const MockupGen = () => {
     }
   };
 
-  // Create a canvas to merge the mockup and uploaded image
-  const generateDownloadImage = () => {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-  
-    const imgMockup = new Image();
-    imgMockup.src = iphoneMockup; // The iPhone mockup image
-  
-    const imgUploaded = new Image();
-    imgUploaded.src = uploadedImage; // The uploaded image
-  
-    imgMockup.onload = () => {
-      // Set canvas size to match the iPhone mockup dimensions
-      canvas.width = imgMockup.width;
-      canvas.height = imgMockup.height;
-  
-      // Draw the iPhone mockup
-      ctx.drawImage(imgMockup, 0, 0, imgMockup.width, imgMockup.height);
-  
-      imgUploaded.onload = () => {
-        // CSS values for cropping and positioning
-        const screenTop = 44; // Top position in px
-        const screenLeft = 156; // Left position in px
-        const screenWidth = 190; // Width in px
-        const screenHeight = 410; // Height in px
-  
-        // Calculate scaling for the uploaded image to crop appropriately
-        const scaleWidth = imgUploaded.width / screenWidth;
-        const scaleHeight = imgUploaded.height / screenHeight;
-  
-        const scale = Math.max(scaleWidth, scaleHeight); // Ensure the image fully covers the screen area
-  
-        const cropWidth = screenWidth * scale;
-        const cropHeight = screenHeight * scale;
-  
-        const cropX = (imgUploaded.width - cropWidth) / 2; // Center the crop horizontally
-        const cropY = (imgUploaded.height - cropHeight) / 2; // Center the crop vertically
-  
-        // Draw the cropped uploaded image
-        ctx.drawImage(
-          imgUploaded,
-          cropX,
-          cropY,
-          cropWidth,
-          cropHeight,
-          screenLeft,
-          screenTop,
-          screenWidth,
-          screenHeight
-        );
-  
-        // Create and trigger download link
-        const link = document.createElement("a");
-        link.href = canvas.toDataURL("image/png");
-        link.download = "iphone-mockup.png";
-        link.click();
-      };
-    };
+  const handleDownload = () => {
+    const highCanvas = highResCanvas.current;
+    const dataUrl = highCanvas.toDataURL("image/png");
+    const a = document.createElement("a");
+    a.href = dataUrl;
+    a.download = "merged-image.png";
+    a.click();
   };
-  
-  
+
+  useEffect(() => {
+    if (img2Loaded && img1Loaded && img3Loaded) {
+      mergeAndCropImages();
+    }
+  }, [img2Loaded, img1Loaded, img3Loaded]);
 
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-2xl font-semibold">Mockup Generator</h1>
-
       <div className="mockup-selector">
         <button
-          className={selectedMockup === "iphone" ? "selected" : ""}
+          className="selected"
           onClick={() => setSelectedMockup("iphone")}
         >
           iPhone
         </button>
-        <button
-          className={selectedMockup === "macbook" ? "selected" : ""}
-          onClick={() => setSelectedMockup("macbook")}
-        >
-          MacBook
-        </button>
       </div>
-
-      {/* Image Upload */}
       <input
         type="file"
         accept="image/*"
+        ref={fileInputRef}
         onChange={handleImageUpload}
         className="inputFile"
       />
+      {/* <div className="mockups">
+        <div className="mockup-container">
+          <img src={iphoneImg} alt="iPhone Mockup" className="mockupIphone" />
+        </div>
+      </div> */}
 
-      {/* Mockup Display */}
-      <div className="mockups">
-        {selectedMockup === "iphone" && (
-          <div className="mockup-container">
-            <img
-              src={iphoneImg}
-              alt="iPhone Mockup"
-              className="mockupIphone"
-            />
-            {uploadedImage && (
-              <img
-                src={uploadedImage}
-                alt="Uploaded"
-                className="iphone-screen"
-              />
-            )}
-            <img src={iphoneDy} className="iphoneDI" />
-          </div>
-        )}
-        {selectedMockup === "macbook" && (
-          <div className="mockup-container">
-            <img
-              src={macbookMockup}
-              alt="MacBook Mockup"
-              className="mockupMac"
-            />
-            {uploadedImage && (
-              <img
-                src={uploadedImage}
-                alt="Uploaded"
-                className="macbook-screen"
-              />
-            )}
-          </div>
-        )}
-      </div>
+      {!iphoneImg && (
+        <img src={iphoneMockup} alt="iPhone Mockup" className="mockupIphone" />
+      )}
+      <canvas ref={canvasRef} className="border border-white m-7"></canvas>
+      <canvas ref={highResCanvas} className="hidden m-7"></canvas>
 
-      {/* Download Button */}
       {uploadedImage && (
-        <button onClick={generateDownloadImage} className="download-btn">
+        <button onClick={handleDownload} className="bg-blue-500  text-white px-3 py-2 rounded-lg">
           Download Mockup Image
         </button>
       )}
