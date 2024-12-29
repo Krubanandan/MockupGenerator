@@ -6,16 +6,27 @@ import iphoneDy from "../assets/iphone di.png";
 
 const MockupGen = () => {
   const [uploadedImage, setUploadedImage] = useState(null);
+  const [img1Loaded, setImg1Loaded] = useState(false);
+  const [img2Loaded, setImg2Loaded] = useState(false);
+  const [img3Loaded, setImg3Loaded] = useState(false);
   const [selectedMockup, setSelectedMockup] = useState("iphone"); // Default mockup selection
+  const [iphoneImg,setIphoneImg]=useState(iphoneMockup);
 
   // Handle image upload
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setUploadedImage(event.target.result); // Set uploaded image as a base64 string
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        setUploadedImage(event.target.result);
+        setImg2Loaded(true);
       };
+      img.src = event.target.result;
+    };
+
+    if (file) {
       reader.readAsDataURL(file);
     }
   };
@@ -114,7 +125,7 @@ const MockupGen = () => {
         {selectedMockup === "iphone" && (
           <div className="mockup-container">
             <img
-              src={iphoneMockup}
+              src={iphoneImg}
               alt="iPhone Mockup"
               className="mockupIphone"
             />
