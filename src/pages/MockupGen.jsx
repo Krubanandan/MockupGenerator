@@ -179,7 +179,7 @@ const MockupGen = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <h1 className="text-2xl font-semibold">Mockup Generator</h1>
+      <h1 className="text-2xl font-semibold mt-4">Mockup Generator</h1>
       <div className="mockup-selector">
         <button
           className="selected"
@@ -193,8 +193,9 @@ const MockupGen = () => {
         accept="image/*"
         ref={fileInputRef}
         onChange={handleImageUpload}
-        className="inputFile"
+        className="file:border file:border-none file:bg-gray-100 file:px-4 file:py-2 file:rounded-md file:text-gray-700 file:hover:bg-gray-150 cursor-pointer "
       />
+
       {/* <div className="mockups">
         <div className="mockup-container">
           <img src={iphoneImg} alt="iPhone Mockup" className="mockupIphone" />
@@ -208,7 +209,10 @@ const MockupGen = () => {
       <canvas ref={highResCanvas} className="hidden m-7"></canvas>
 
       {uploadedImage && (
-        <button onClick={handleDownload} className="bg-blue-500  text-white px-3 py-2 rounded-lg">
+        <button
+          onClick={handleDownload}
+          className="bg-blue-500  text-white px-3 py-2 rounded-lg"
+        >
           Download Mockup Image
         </button>
       )}

@@ -42,6 +42,7 @@ h1 {
 
 .mockupIphone {
   width: 500px; /* Adjust based on your mockup dimensions */
+  margin-top: 28px;
 }
 
 .mockupMac {
